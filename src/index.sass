@@ -1,0 +1,90 @@
+$site-maxwidth: 1440 //?
+$site-padding: 160 //?
+$mp: 60
+$site-container: $site-maxwidth - $site-padding*2
+    
+// --- min-max ---
+@function mm($min, $max, $min-wind, $max-wind: $site-container)
+    @return clamp(#{$min}px, calc(#{$min}px + (#{$max} - #{$min}) * (100vw - #{$min-wind}px) / (#{$max-wind} - #{$min-wind})), #{$max}px)
+
+// --- media padding ---
+@function mp($media, $padd)
+    @return calc( 50% - ( ( #{$media}px -  #{$padd}px * 2 ) / 2 ) ) 
+    
+// === BASIC ===
+html 
+    box-sizing: border-box
+    font-size: 10px
+    // font-size: mm(6, 10, 320)
+    scroll-behavior: smooth
+*, *::after, *::before 
+    margin: 0
+    padding: 0
+    box-sizing: inherit
+    background:
+        repeat: no-repeat
+        position: center 
+body 
+    overflow-x: hidden
+    font-family: Open Sans, sans-serif 
+    font-style: normal
+img 
+    max-width: 100%
+    height: auto
+a 
+    text-decoration: none
+    &:hover
+        opacity: 0.8
+
+
+// --- header, main, footer ---
+header, main, footer 
+    // border: 1px solid #0000ff
+    margin: 0 auto
+    max-width: #{$site-maxwidth}px
+    overflow: hidden
+    > *, .container 
+        // border: 1px solid #ff0000
+        margin: 0 auto
+        max-width: #{$site-container}px 
+        @media screen and ( max-width:  #{$site-container + $mp}px ) 
+            max-width: #{1070 - $mp}px
+        @media screen and ( max-width:  1070px )
+            max-width: #{992 - $mp}px
+        @media screen and ( max-width:  992px )
+            max-width: #{768 - $mp}px
+        @media screen and ( max-width:  768px )
+            max-width: #{576 - $mp}px
+
+            
+
+
+
+    
+    
+    
+
+    
+/*  === header ===  */
+header
+.header 
+    
+    
+
+
+/*  === main ===  */
+main
+.main
+
+
+
+
+/*  === footer ===  */
+footer
+.footer
+
+
+
+
+
+

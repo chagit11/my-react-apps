@@ -1,0 +1,128 @@
+import React from 'react';
+import styled from 'styled-components';
+import { ContainerStyled } from '../../--styled/ContainerStyled'
+
+
+const Timer_ = styled.div`
+    .display {
+        padding: 30px;
+        background-color: #000;
+        justify-content: center;
+        /* align-content: center; */
+        display: grid;
+        grid-template-columns: repeat(3, 150px);
+        gap: 30px;
+        .items {
+            height: 100px;
+            background-color: #fff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 700;
+            font-size: 30px;
+            color: #a3a3a3;
+        }
+    }
+    //
+    .buttons {
+        padding: 30px;
+        background-color: #000;
+        display: grid;
+        grid-auto-flow: column;
+        grid-auto-columns: max-content;
+        gap: 30px;
+        justify-content: center;
+        .btn {
+            padding: 5px 15px;
+            background-color: #fff;
+            font-size: 22px;
+            cursor: pointer;
+            &:hover {
+                transform: translateY(-3px);
+            }
+            &.start {
+                color: green;
+            }
+            &.pause {
+                color: blue;
+            }
+            &.stop {
+                color: red;
+            }
+        }
+    }
+`
+
+
+    
+export const Timer = ({...props}) => {
+    const [hours, setHours] = React.useState(0)
+    const [minutes, setMinutes] = React.useState(0)
+    const [seconds, setSeconds] = React.useState(0)
+    // 
+    const hoursRef = React.useRef(0)
+    const minutesRef = React.useRef(0)
+    const secondsRef = React.useRef(0)
+    const [targetDispRef, setTargetDispRef] = React.useState()
+    const [startTouchmove, setStartTouchmove] = React.useState(0)
+    const [endTouchmove, setEndTouchmove] = React.useState(0)
+    // 
+    const onwheelDisplay = (e, disp, setDisp, to) => {
+        if(e.deltaY==100) {
+            if(disp==to) setDisp(0)
+            else setDisp(disp+1)
+        } 
+        if(e.deltaY==-100) {
+            if(disp==0) setDisp(to)
+            else setDisp(disp-1)
+        }
+    }
+    // 
+    const ontouchDisplay = (ref) => {
+        ref.current.addEventListener('touchstart', (e) => {
+            setStartTouchmove(e.changedTouches[0].clientY)
+        })
+        ref.current.addEventListener('touchend', (e) => {
+            setTargetDispRef(ref.current)
+            setEndTouchmove(e.changedTouches[0].clientY)
+        })
+    }
+    // 
+    const setvalueOntouchDiplay = (disp, setDisp, to) => {
+        if(startTouchmove<endTouchmove 
+            && Math.abs(startTouchmove-endTouchmove)>20) {
+            if(disp==to) setDisp(0)
+            else setDisp(disp+1)
+        }
+        else if(startTouchmove>endTouchmove 
+            && Math.abs(startTouchmove-endTouchmove)>20) {
+            if(disp==0) setDisp(to)
+            else setDisp(disp-1)
+        }
+    }
+    //
+    React.useEffect(() => {
+        ontouchDisplay(hoursRef)
+        ontouchDisplay(minutesRef)
+        ontouchDisplay(secondsRef)
+    }, [])
+    React.useEffect(() => {
+        if(targetDispRef===hoursRef.current) setvalueOntouchDiplay(hours, setHours, 23)
+        if(targetDispRef===minutesRef.current) setvalueOntouchDiplay(minutes, setMinutes, 59)
+        if(targetDispRef===secondsRef.current) setvalueOntouchDiplay(seconds, setSeconds, 59)
+    }, [endTouchmove])
+    return (
+        <Timer_ as={ContainerStyled} className='timer'>
+            <div className='display'>
+                <div onWheel={(e)=> onwheelDisplay(e, hours, setHours, 23)} ref={hoursRef} className="items hours">{hours<10 ? `0${hours}` : hours} ч.</div>
+                <div onWheel={(e)=> onwheelDisplay(e, minutes, setMinutes, 59)} ref={minutesRef} className="items minutes">{minutes<10 ? `0${minutes}` : minutes} мин.</div>
+                <div onWheel={(e)=> onwheelDisplay(e, seconds, setSeconds, 59)} ref={secondsRef} className="items seconds">{seconds<10 ? `0${seconds}` : seconds} с.</div>
+            </div>
+            <div className="buttons">
+                <div className="btn start">Start</div>
+                <div className="btn pause">Pause</div>
+                <div className="btn stop">Stop</div>
+            </div>
+        </Timer_>
+    );
+}
