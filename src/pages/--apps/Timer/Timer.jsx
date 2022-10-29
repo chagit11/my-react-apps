@@ -93,11 +93,11 @@ export const Timer = ({...props}) => {
     const setvalueOntouchDiplay = (disp, setDisp, to) => {
         if(startTouch<endTouch) {
             if(disp>to-1) setDisp(0)
-            else if((startTouch-endTouch)%14===0) setDisp(disp+1)
+            else if(Math.abs(startTouch-endTouch)%8===0) setDisp(disp+1)
         }
         else if(startTouch>endTouch) {
             if(disp===0) setDisp(to)
-            else if((startTouch-endTouch)%14===0) setDisp(disp-1)
+            else if(Math.abs(startTouch-endTouch)%8===0) setDisp(disp-1)
         }
     }
     //
