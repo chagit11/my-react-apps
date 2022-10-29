@@ -64,40 +64,38 @@ export const Timer = ({...props}) => {
     const minutesRef = React.useRef(0)
     const secondsRef = React.useRef(0)
     const [targetDispRef, setTargetDispRef] = React.useState()
-    const [startTouchmove, setStartTouchmove] = React.useState(0)
-    const [endTouchmove, setEndTouchmove] = React.useState(0)
+    const [startTouch, setStartTouch] = React.useState(0)
+    const [endTouch, setEndTouch] = React.useState(0)
     // 
     const onwheelDisplay = (e, disp, setDisp, to) => {
-        if(e.deltaY==100) {
-            if(disp==to) setDisp(0)
+        if(e.deltaY===100) {
+            if(disp===to) setDisp(0)
             else setDisp(disp+1)
         } 
-        if(e.deltaY==-100) {
-            if(disp==0) setDisp(to)
+        if(e.deltaY===-100) {
+            if(disp===0) setDisp(to)
             else setDisp(disp-1)
         }
     }
     // 
     const ontouchDisplay = (ref) => {
         ref.current.addEventListener('touchstart', (e) => {
-            setStartTouchmove(e.changedTouches[0].clientY)
-        })
-        ref.current.addEventListener('touchend', (e) => {
             setTargetDispRef(ref.current)
-            setEndTouchmove(e.changedTouches[0].clientY)
+            setStartTouch(e.changedTouches[0].clientY)
+        })
+        ref.current.addEventListener('touchmove', (e) => {
+            setEndTouch(e.changedTouches[0].clientY)
         })
     }
     // 
     const setvalueOntouchDiplay = (disp, setDisp, to) => {
-        if(startTouchmove<endTouchmove 
-            && Math.abs(startTouchmove-endTouchmove)>20) {
-            if(disp==to) setDisp(0)
-            else setDisp(disp+1)
+        if(startTouch<endTouch) {
+            if(disp>to-1) setDisp(0)
+            else if((startTouch-endTouch)%14===0) setDisp(disp+1)
         }
-        else if(startTouchmove>endTouchmove 
-            && Math.abs(startTouchmove-endTouchmove)>20) {
-            if(disp==0) setDisp(to)
-            else setDisp(disp-1)
+        else if(startTouch>endTouch) {
+            if(disp===0) setDisp(to)
+            else if((startTouch-endTouch)%14===0) setDisp(disp-1)
         }
     }
     //
@@ -110,7 +108,8 @@ export const Timer = ({...props}) => {
         if(targetDispRef===hoursRef.current) setvalueOntouchDiplay(hours, setHours, 23)
         if(targetDispRef===minutesRef.current) setvalueOntouchDiplay(minutes, setMinutes, 59)
         if(targetDispRef===secondsRef.current) setvalueOntouchDiplay(seconds, setSeconds, 59)
-    }, [endTouchmove])
+    }, [endTouch])
+    // 
     return (
         <Timer_ as={ContainerStyled} className='timer'>
             <div className='display'>
