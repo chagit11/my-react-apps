@@ -95,7 +95,7 @@ export const Timer = ({...props}) => {
             if(disp>to-1) setDisp(0)
             else if(Math.abs(startTouch-endTouch)%8===0) setDisp(disp+1)
         }
-        else if(startTouch>endTouch) {
+        if(startTouch>endTouch) {
             if(disp===0) setDisp(to)
             else if(Math.abs(startTouch-endTouch)%8===0) setDisp(disp-1)
         }
