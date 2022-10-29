@@ -44,7 +44,7 @@ const Timer_ = styled.div`
                 color: green;
             }
             &.pause {
-                color: orange;
+                color: blue;
             }
             &.stop {
                 color: red;
