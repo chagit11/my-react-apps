@@ -82,11 +82,11 @@ export const Timer = ({...props}) => {
         ref.current.addEventListener('touchstart', (e) => {
             e.preventDefault()
             setTargetDispRef(ref.current)
-            setStartTouch(e.changedTouches[0].clientY)
+            setStartTouch(e.changedTouches[0].clientY.toFixed(0))
         })
         ref.current.addEventListener('touchmove', (e) => {
             e.preventDefault()
-            setEndTouch(e.changedTouches[0].clientY)
+            setEndTouch(e.changedTouches[0].clientY.toFixed(0))
         })
     }
     // 
