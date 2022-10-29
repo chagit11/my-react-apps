@@ -80,10 +80,12 @@ export const Timer = ({...props}) => {
     // 
     const ontouchDisplay = (ref) => {
         ref.current.addEventListener('touchstart', (e) => {
+            e.preventDefault()
             setTargetDispRef(ref.current)
             setStartTouch(e.changedTouches[0].clientY)
         })
         ref.current.addEventListener('touchmove', (e) => {
+            e.preventDefault()
             setEndTouch(e.changedTouches[0].clientY)
         })
     }
