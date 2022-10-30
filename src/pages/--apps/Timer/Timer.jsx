@@ -13,14 +13,38 @@ const Timer_ = styled.div`
         grid-template-columns: repeat(3, 150px);
         gap: 30px;
         .items {
-            height: 100px;
-            background-color: #fff;
+            padding: 5px 0;
             display: flex;
+            flex-direction: column;
             justify-content: center;
             align-items: center;
-            font-weight: 700;
-            font-size: 30px;
-            color: #a3a3a3;
+            background-color: #fff;
+            .up-arrow, .down-arrow {
+                width: 0;
+                height: 0;
+                border-left: 50px solid transparent;
+                border-right: 50px solid transparent;
+                opacity: 0.5;
+                cursor: pointer;
+                &:hover {
+                    opacity: 0.9;
+                }
+            }
+            .up-arrow {
+                margin-bottom: 15px;
+                border-bottom: 25px solid #000;
+            }
+            .down-arrow {
+                margin-top: 15px;
+                border-top: 25px solid #000;
+            }
+            .value {
+                font-weight: 900;
+                font-size: 30px;
+                text-align: center;
+                color: #a3a3a3;
+            }
+
         }
     }
     //
@@ -78,6 +102,17 @@ export const Timer = ({...props}) => {
         }
     }
     // 
+    const onclickDisplay = (direc, disp, setDisp, to) => {
+        if(direc==='+') {
+            if(disp===to) setDisp(0)
+            else setDisp(disp+1)
+        } 
+        if(direc==='-') {
+            if(disp===0) setDisp(to)
+            else setDisp(disp-1)
+        }
+    }
+    // 
     const ontouchDisplay = (ref) => {
         ref.current.addEventListener('touchstart', (e) => {
             e.preventDefault()
@@ -115,9 +150,38 @@ export const Timer = ({...props}) => {
     return (
         <Timer_ as={ContainerStyled} className='timer'>
             <div className='display'>
-                <div onWheel={(e)=> onwheelDisplay(e, hours, setHours, 23)} ref={hoursRef} className="items hours">{hours<10 ? `0${hours}` : hours} ч.</div>
-                <div onWheel={(e)=> onwheelDisplay(e, minutes, setMinutes, 59)} ref={minutesRef} className="items minutes">{minutes<10 ? `0${minutes}` : minutes} мин.</div>
-                <div onWheel={(e)=> onwheelDisplay(e, seconds, setSeconds, 59)} ref={secondsRef} className="items seconds">{seconds<10 ? `0${seconds}` : seconds} с.</div>
+                {/* <div className="items hours">
+                    <input 
+                        ref={hoursRef}  
+                        onWheel={(e)=> onwheelDisplay(e, hours, setHours, 23)} 
+                        onChange={(e)=>setHours(e.target.value)} 
+                        value={hours<10 ? `0${hours}` : hours} 
+                    />
+                    <span>ч.</span>
+                </div> */}
+                {/* <div onWheel={(e)=> onwheelDisplay(e, minutes, setMinutes, 59)} ref={minutesRef} className="items minutes">
+                    <input onChange={()=>setMinutes(minutes)} value={minutes<10 ? `0${minutes}` : minutes} />
+                    <span>мин.</span>
+                </div> */}
+                {/* <div onWheel={(e)=> onwheelDisplay(e, seconds, setSeconds, 59)} ref={secondsRef} className="items seconds">
+                    <input onChange={()=>setSeconds(seconds)} value={seconds<10 ? `0${seconds}` : seconds} />
+                    <span>с.</span>
+                </div> */}
+                <div onWheel={(e)=> onwheelDisplay(e, hours, setHours, 23)} ref={hoursRef} className="items hours">
+                    <div onClick={()=> onclickDisplay('+', hours, setHours, 23)} className='up-arrow'></div>
+                    <div className='value'>{hours<10 ? `0${hours}` : hours} ч.</div>
+                    <div onClick={()=> onclickDisplay('-', hours, setHours, 23)} className='down-arrow'></div>
+                </div>
+                <div onWheel={(e)=> onwheelDisplay(e, minutes, setMinutes, 59)} ref={minutesRef} className="items minutes">
+                    <div onClick={()=> onclickDisplay('+', minutes, setMinutes, 59)} className='up-arrow'></div>
+                    <div className='value'>{minutes<10 ? `0${minutes}` : minutes} мин.</div>
+                    <div onClick={()=> onclickDisplay('-', minutes, setMinutes, 59)} className='down-arrow'></div>
+                </div>
+                <div onWheel={(e)=> onwheelDisplay(e, seconds, setSeconds, 59)} ref={secondsRef} className="items seconds">
+                    <div onClick={()=> onclickDisplay('+', seconds, setSeconds, 59)} className='up-arrow'></div>
+                    <div className='value'>{seconds<10 ? `0${seconds}` : seconds} с.</div>
+                    <div onClick={()=> onclickDisplay('-', seconds, setSeconds, 59)} className='down-arrow'></div>
+                </div>
             </div>
             <div className="buttons">
                 <div className="btn start">Start</div>
