@@ -155,13 +155,17 @@ export const Timer = ({...props}) => {
         // -- 
         uparrows.forEach(t => {
             t.addEventListener('mousedown', mouseUpDownArrows)
+            t.addEventListener('touchstart', mouseUpDownArrows)
             t.addEventListener('mouseup', stopInterv)
+            t.addEventListener('touchend', stopInterv)
         })
         // -- 
         return () => {
             uparrows.forEach(t => {
                 t.removeEventListener('mousedown', mouseUpDownArrows)
+                t.removeEventListener('touchstart', mouseUpDownArrows)
                 t.removeEventListener('mouseup', stopInterv)
+                t.removeEventListener('touchend', stopInterv)
             })
         }
     })
