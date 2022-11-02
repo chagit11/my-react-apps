@@ -132,6 +132,7 @@ export const Timer = ({...props}) => {
         ]
         // -- 
         const mouseUpDownArrows = (e) => {
+            e.preventDefault()
             intervalRef.current = setInterval(()=> {
                 if(e.target.parentElement.classList.contains('hours')) {
                     if(e.target.classList.contains('up-arrow')) plusMinusDisplay('+', setHours, 23)
@@ -176,6 +177,7 @@ export const Timer = ({...props}) => {
             dispRef.current.querySelector('.seconds .down-arrow'),
         ]
         const clickArrows = (e) => {
+            e.preventDefault()
             if(e.target.parentElement.classList.contains('hours')) {
                 if(e.target.classList.contains('up-arrow')) plusMinusDisplay('+', setHours, 23)
                 if(e.target.classList.contains('down-arrow')) plusMinusDisplay('-', setHours, 23)
