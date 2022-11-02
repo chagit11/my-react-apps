@@ -84,13 +84,16 @@ export const Timer = ({...props}) => {
     const [minutes, setMinutes] = React.useState(0)
     const [seconds, setSeconds] = React.useState(0)
     // 
-    const hoursRef = React.useRef(0)
-    const minutesRef = React.useRef(0)
-    const secondsRef = React.useRef(0)
-    const [targetDispRef, setTargetDispRef] = React.useState()
-    const [startTouch, setStartTouch] = React.useState(0)
-    const [endTouch, setEndTouch] = React.useState(0)
+    const dispRef = React.useRef(null)
+    const intervalRef = React.useRef()
+    // const hoursRef = React.useRef(0)
+    // const minutesRef = React.useRef(0)
+    // const secondsRef = React.useRef(0)
+    // const [targetDispRef, setTargetDispRef] = React.useState()
+    // const [startTouch, setStartTouch] = React.useState(0)
+    // const [endTouch, setEndTouch] = React.useState(0)
     // 
+    // -- func-> wheel Display --
     const onwheelDisplay = (e, disp, setDisp, to) => {
         if(e.deltaY===100) {
             if(disp===to) setDisp(0)
@@ -101,17 +104,102 @@ export const Timer = ({...props}) => {
             else setDisp(disp-1)
         }
     }
-    // 
-    const onclickDisplay = (direc, disp, setDisp, to) => {
+    // -- func-> click Display --
+    const plusMinusDisplay = (direc, setDisp, to) => {
         if(direc==='+') {
-            if(disp===to) setDisp(0)
-            else setDisp(disp+1)
+            setDisp(disp => {
+                if(disp===to) return 0
+                else return disp+1
+            })
         } 
         if(direc==='-') {
-            if(disp===0) setDisp(to)
-            else setDisp(disp-1)
+            setDisp(disp => {
+                if(disp===0) return to
+                else return disp-1
+            })
         }
     }
+    // -- up down mouse arrows --
+    React.useEffect(() => {
+        // -- arrows up down
+        const uparrows = [
+            dispRef.current.querySelector('.hours .up-arrow'),
+            dispRef.current.querySelector('.minutes .up-arrow'),
+            dispRef.current.querySelector('.seconds .up-arrow'),
+            dispRef.current.querySelector('.hours .down-arrow'),
+            dispRef.current.querySelector('.minutes .down-arrow'),
+            dispRef.current.querySelector('.seconds .down-arrow'),
+        ]
+        // -- 
+        const mouseUpDownArrows = (e) => {
+            intervalRef.current = setInterval(()=> {
+                if(e.target.parentElement.classList.contains('hours')) {
+                    if(e.target.classList.contains('up-arrow')) plusMinusDisplay('+', setHours, 23)
+                    if(e.target.classList.contains('down-arrow')) plusMinusDisplay('-', setHours, 23)
+                } 
+                if(e.target.parentElement.classList.contains('minutes')) {
+                    if(e.target.classList.contains('up-arrow')) plusMinusDisplay('+', setMinutes, 59)
+                    if(e.target.classList.contains('down-arrow')) plusMinusDisplay('-', setMinutes, 59)
+                } 
+                if(e.target.parentElement.classList.contains('seconds')) {
+                    if(e.target.classList.contains('up-arrow')) plusMinusDisplay('+', setSeconds, 59)
+                    if(e.target.classList.contains('down-arrow')) plusMinusDisplay('-', setSeconds, 59)
+                } 
+            }, 100)
+        }
+        // --
+        const stopInterv = () => {
+            clearInterval(intervalRef.current)
+        }
+        // -- 
+        uparrows.forEach(t => {
+            t.addEventListener('mousedown', mouseUpDownArrows)
+            t.addEventListener('mouseup', stopInterv)
+        })
+        // -- 
+        return () => {
+            uparrows.forEach(t => {
+                t.removeEventListener('mousedown', mouseUpDownArrows)
+                t.removeEventListener('mouseup', stopInterv)
+            })
+        }
+    })
+    // -- click up down arrows ---
+    React.useEffect(() => {
+         // -- arrows up down
+         const uparrows = [
+            dispRef.current.querySelector('.hours .up-arrow'),
+            dispRef.current.querySelector('.minutes .up-arrow'),
+            dispRef.current.querySelector('.seconds .up-arrow'),
+            dispRef.current.querySelector('.hours .down-arrow'),
+            dispRef.current.querySelector('.minutes .down-arrow'),
+            dispRef.current.querySelector('.seconds .down-arrow'),
+        ]
+        const clickArrows = (e) => {
+            if(e.target.parentElement.classList.contains('hours')) {
+                if(e.target.classList.contains('up-arrow')) plusMinusDisplay('+', setHours, 23)
+                if(e.target.classList.contains('down-arrow')) plusMinusDisplay('-', setHours, 23)
+            } 
+            if(e.target.parentElement.classList.contains('minutes')) {
+                if(e.target.classList.contains('up-arrow')) plusMinusDisplay('+', setMinutes, 59)
+                if(e.target.classList.contains('down-arrow')) plusMinusDisplay('-', setMinutes, 59)
+            } 
+            if(e.target.parentElement.classList.contains('seconds')) {
+                if(e.target.classList.contains('up-arrow')) plusMinusDisplay('+', setSeconds, 59)
+                if(e.target.classList.contains('down-arrow')) plusMinusDisplay('-', setSeconds, 59)
+            } 
+        }
+        // -- 
+        uparrows.forEach(t => {
+            t.addEventListener('click', clickArrows)
+        })
+        // -- 
+        return () => {
+            uparrows.forEach(t => {
+                t.removeEventListener('click', clickArrows)
+            })
+        }
+    })   
     // 
    /*  const ontouchDisplay = (ref) => {
         ref.current.addEventListener('touchstart', (e) => {
@@ -149,38 +237,21 @@ export const Timer = ({...props}) => {
     // 
     return (
         <Timer_ as={ContainerStyled} className='timer'>
-            <div className='display'>
-                {/* <div className="items hours">
-                    <input 
-                        ref={hoursRef}  
-                        onWheel={(e)=> onwheelDisplay(e, hours, setHours, 23)} 
-                        onChange={(e)=>setHours(e.target.value)} 
-                        value={hours<10 ? `0${hours}` : hours} 
-                    />
-                    <span>ч.</span>
-                </div> */}
-                {/* <div onWheel={(e)=> onwheelDisplay(e, minutes, setMinutes, 59)} ref={minutesRef} className="items minutes">
-                    <input onChange={()=>setMinutes(minutes)} value={minutes<10 ? `0${minutes}` : minutes} />
-                    <span>мин.</span>
-                </div> */}
-                {/* <div onWheel={(e)=> onwheelDisplay(e, seconds, setSeconds, 59)} ref={secondsRef} className="items seconds">
-                    <input onChange={()=>setSeconds(seconds)} value={seconds<10 ? `0${seconds}` : seconds} />
-                    <span>с.</span>
-                </div> */}
+            <div ref={dispRef} className='display'>
                 <div onWheel={(e)=> onwheelDisplay(e, hours, setHours, 23)} className="items hours">
-                    <div onClick={()=> onclickDisplay('+', hours, setHours, 23)} className='up-arrow'></div>
+                    <div className='up-arrow'></div>
                     <div className='value'>{hours<10 ? `0${hours}` : hours} ч.</div>
-                    <div onClick={()=> onclickDisplay('-', hours, setHours, 23)} className='down-arrow'></div>
+                    <div className='down-arrow'></div>
                 </div>
                 <div onWheel={(e)=> onwheelDisplay(e, minutes, setMinutes, 59)} className="items minutes">
-                    <div onClick={()=> onclickDisplay('+', minutes, setMinutes, 59)} className='up-arrow'></div>
+                    <div className='up-arrow'></div>
                     <div className='value'>{minutes<10 ? `0${minutes}` : minutes} мин.</div>
-                    <div onClick={()=> onclickDisplay('-', minutes, setMinutes, 59)} className='down-arrow'></div>
+                    <div className='down-arrow'></div>
                 </div>
                 <div onWheel={(e)=> onwheelDisplay(e, seconds, setSeconds, 59)} className="items seconds">
-                    <div onClick={()=> onclickDisplay('+', seconds, setSeconds, 59)} className='up-arrow'></div>
+                    <div className='up-arrow'></div>
                     <div className='value'>{seconds<10 ? `0${seconds}` : seconds} с.</div>
-                    <div onClick={()=> onclickDisplay('-', seconds, setSeconds, 59)} className='down-arrow'></div>
+                    <div className='down-arrow'></div>
                 </div>
             </div>
             <div className="buttons">
