@@ -4,6 +4,30 @@ import { ContainerStyled } from '../../--styled/ContainerStyled'
 
 
 const Timer_ = styled.div`
+    border: 5px solid #de8901;
+    @media screen and ( max-width:  1440px ) {
+        margin-top: 100px;
+    }
+    @media screen and ( max-width:  768px ) {
+        .display {
+            grid-template-columns: repeat(3, 120px) !important;
+            gap: 15px !important;
+        }
+        .value {
+            font-weight: 800 !important;
+            font-size: 24px !important;
+        }
+    }
+    @media screen and ( max-width:  425px ) {
+        .display {
+            grid-template-columns: repeat(3, 90px) !important;
+            gap: 10px !important;
+        }
+        .value {
+            font-weight: 800 !important;
+            font-size: 22px !important;
+        }
+    }
     .display {
         padding: 30px;
         background-color: #000;
@@ -218,7 +242,7 @@ export const Timer = ({...props}) => {
                 </div>
                 <div onWheel={(e)=> onwheelDisplay(e, minutes, setMinutes, 59)} className="items minutes">
                     <div className='up-arrow'></div>
-                    <div className='value'>{minutes<10 ? `0${minutes}` : minutes} мин.</div>
+                    <div className='value'>{minutes<10 ? `0${minutes}` : minutes} м.</div>
                     <div className='down-arrow'></div>
                 </div>
                 <div onWheel={(e)=> onwheelDisplay(e, seconds, setSeconds, 59)} className="items seconds">
