@@ -133,7 +133,7 @@ export const Timer = ({...props}) => {
         // -- 
         const mouseUpDownArrows = (e) => {
             e.preventDefault()
-            intervalRef.current = setInterval(()=> {
+            const changeDisps = () => {
                 if(e.target.parentElement.classList.contains('hours')) {
                     if(e.target.classList.contains('up-arrow')) plusMinusDisplay('+', setHours, 23)
                     if(e.target.classList.contains('down-arrow')) plusMinusDisplay('-', setHours, 23)
@@ -145,7 +145,11 @@ export const Timer = ({...props}) => {
                 if(e.target.parentElement.classList.contains('seconds')) {
                     if(e.target.classList.contains('up-arrow')) plusMinusDisplay('+', setSeconds, 59)
                     if(e.target.classList.contains('down-arrow')) plusMinusDisplay('-', setSeconds, 59)
-                } 
+                }
+            }
+            changeDisps()
+            intervalRef.current = setInterval(()=> {
+                changeDisps()
             }, 100)
         }
         // --
@@ -169,43 +173,6 @@ export const Timer = ({...props}) => {
             })
         }
     })
-    // -- click up down arrows ---
-    React.useEffect(() => {
-         // -- arrows up down
-         const uparrows = [
-            dispRef.current.querySelector('.hours .up-arrow'),
-            dispRef.current.querySelector('.minutes .up-arrow'),
-            dispRef.current.querySelector('.seconds .up-arrow'),
-            dispRef.current.querySelector('.hours .down-arrow'),
-            dispRef.current.querySelector('.minutes .down-arrow'),
-            dispRef.current.querySelector('.seconds .down-arrow'),
-        ]
-        const clickArrows = (e) => {
-            e.preventDefault()
-            if(e.target.parentElement.classList.contains('hours')) {
-                if(e.target.classList.contains('up-arrow')) plusMinusDisplay('+', setHours, 23)
-                if(e.target.classList.contains('down-arrow')) plusMinusDisplay('-', setHours, 23)
-            } 
-            if(e.target.parentElement.classList.contains('minutes')) {
-                if(e.target.classList.contains('up-arrow')) plusMinusDisplay('+', setMinutes, 59)
-                if(e.target.classList.contains('down-arrow')) plusMinusDisplay('-', setMinutes, 59)
-            } 
-            if(e.target.parentElement.classList.contains('seconds')) {
-                if(e.target.classList.contains('up-arrow')) plusMinusDisplay('+', setSeconds, 59)
-                if(e.target.classList.contains('down-arrow')) plusMinusDisplay('-', setSeconds, 59)
-            } 
-        }
-        // -- 
-        uparrows.forEach(t => {
-            t.addEventListener('click', clickArrows)
-        })
-        // -- 
-        return () => {
-            uparrows.forEach(t => {
-                t.removeEventListener('click', clickArrows)
-            })
-        }
-    })   
     // 
    /*  const ontouchDisplay = (ref) => {
         ref.current.addEventListener('touchstart', (e) => {
