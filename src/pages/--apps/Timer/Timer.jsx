@@ -109,7 +109,7 @@ export const Timer = ({...props}) => {
     const [seconds, setSeconds] = React.useState(0)
     // 
     const dispRef = React.useRef(null)
-    const intervalRef = React.useRef()
+    const idIntervalRef = React.useRef()
     // const hoursRef = React.useRef(0)
     // const minutesRef = React.useRef(0)
     // const secondsRef = React.useRef(0)
@@ -172,13 +172,14 @@ export const Timer = ({...props}) => {
                 }
             }
             changeDisps()
-            intervalRef.current = setInterval(()=> {
-                changeDisps()
+            let ts = new Date().getTime()
+            idIntervalRef.current = setInterval(()=> {
+                if(new Date().getTime() - ts > 500) changeDisps()
             }, 100)
         }
         // --
         const stopInterv = () => {
-            clearInterval(intervalRef.current)
+            clearInterval(idIntervalRef.current)
         }
         // -- 
         uparrows.forEach(t => {
